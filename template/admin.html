@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        .admin-panel { padding:20px; }
+        #adminBooksTable { width:100%; border-collapse:collapse; }
+        #adminBooksTable th, #adminBooksTable td { border:1px solid #ddd; padding:8px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Admin Panel</h1>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="dashboard.html">User Dashboard</a>
+    </nav>
+    <div>
+        <span id="user"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<section id="adminPanel" class="admin-panel">
+    <h2>Manage Books</h2>
+    <form id="addBookForm">
+        <input type="hidden" id="editId" value="">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="number" id="price" placeholder="Price" required>
+        <input type="text" id="img" placeholder="Image URL">
+        <input type="number" id="stock" placeholder="Stock" required>
+        <input type="text" id="desc" placeholder="Short description">
+        <button type="submit">Add / Save Book</button>
+        <button type="button" id="cancelEdit" style="display:none;">Cancel</button>
+    </form>
+
+    <table id="adminBooksTable">
+        <thead>
+            <tr><th>ID</th><th>Title</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</section>
+
+<main class="books" id="booksContainer"></main>
+
+<div id="notification" class="notification"></div>
+
+<script src="books.js"></script>
+<script src="auth.js"></script>
+<script>
+// Protect page: only admin allowed
+const raw = localStorage.getItem('loggedUser');
+if(!raw) { window.location.href = 'login.html'; }
+let u;
+try{ u = JSON.parse(raw); } catch(e){ u = { email: raw }; }
+if(!u.isAdmin){ alert('Admin access required'); window.location.href='dashboard.html'; }
+document.getElementById('user').innerText = 'Welcome, ' + (u.name || u.email);
+function logout(){ localStorage.removeItem('loggedUser'); window.location.href='home.html'; }
+</script>
+<script src="admin.js"></script>
+</body>
+</html>
